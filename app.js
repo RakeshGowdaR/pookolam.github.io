@@ -62,42 +62,20 @@ function toPos(xFrac, yFrac, z) {
   return `${(xFrac * TARGET_WIDTH).toFixed(4)} ${(yFrac * TARGET_HEIGHT).toFixed(4)} ${z || 0}`;
 }
 
-// Each flower accent sits NEAR its story element but offset away from its
-// center, so it doesn't stack directly on top of the tree/boat/woman
-// graphics — the earlier version clustered everything at the same point
-// (a flower landing right on the woman's face, the tree overshooting the
-// frame). These are spread toward the four "corners" instead.
+// No flower icons anymore — just a caption + light burst at each story
+// point, plus the tree/boat graphics. `scale` here only sizes the burst.
 const STORY_BEATS = [
-  { asset: '#marigold', x: 0.32, y: 0.22, scale: 0.14, caption: 'The palm sways — Onam breezes in' },
-  { asset: '#butterfly-pea', x: -0.34, y: 0.20, scale: 0.14, caption: 'The boats race by in festival joy' },
-  { asset: '#jasmine', x: -0.12, y: -0.06, scale: 0.14, caption: "She waits, dressed for his homecoming" },
-  { asset: '#lotus', x: 0.00, y: -0.30, scale: 0.20, caption: 'The lotus blooms to welcome the king' },
+  { x: 0.32, y: 0.22, scale: 0.20, caption: 'The palm sways — Onam breezes in' },
+  { x: -0.34, y: 0.20, scale: 0.20, caption: 'The boats race by in festival joy' },
+  { x: -0.12, y: -0.06, scale: 0.18, caption: "She waits, dressed for his homecoming" },
+  { x: 0.00, y: -0.30, scale: 0.22, caption: 'The lotus blooms to welcome the king' },
 ];
-
-const CROWN_ACCENT = { asset: '#marigold', x: 0.00, y: 0.34, scale: 0.09 };
 
 // The coconut tree's position is its BASE (see makeTree — it sways from
 // there, not its center), roughly where the trunk meets the ground in the
-// design. Scaled down from the first pass, which overshot the top edge of
-// the frame entirely. The boat bobs in place, so its spot is just its
-// center, also scaled down and nudged to sit clear of the flower accent.
+// design. The boat bobs in place, so its spot is just its center.
 const TREE_SPOT = { x: 0.20, y: -0.02, scale: 0.22 };
 const BOAT_SPOT = { x: -0.26, y: 0.00, scale: 0.24 };
-
-const RING_ACCENTS = (() => {
-  const spots = [];
-  const count = 8;
-  for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2;
-    spots.push({
-      asset: i % 2 === 0 ? '#marigold' : '#jasmine',
-      x: Math.cos(angle) * 0.46,
-      y: Math.sin(angle) * 0.46,
-      scale: 0.10,
-    });
-  }
-  return spots;
-})();
 
 const SPARKLE_COUNT = 14;
 
@@ -110,30 +88,32 @@ function clearTimers() {
   timers = [];
 }
 
-function makeFlower(spot) {
+// A "HAPPY ONAM" banner arcing above the tracked design like a rainbow,
+// outside the pookolam artwork itself rather than overlapping it. Appears
+// once, immediately, and stays up with a slow breathing glow rather than
+// fading out like the per-beat effects.
+function makeTitleBanner() {
   const el = document.createElement('a-image');
   el.classList.add('bloom-layer');
-  el.setAttribute('src', spot.asset);
-  el.setAttribute('position', toPos(spot.x, spot.y, 0));
+  el.setAttribute('src', '#happy-onam');
+  const width = 0.85;
+  const height = width * (190 / 400); // happy-onam.svg viewBox is 400x190
+  el.setAttribute('width', String(width));
+  el.setAttribute('height', String(height));
+  el.setAttribute('position', toPos(0, 0.5 * TARGET_HEIGHT + height / 2 + 0.04, 0.02));
   el.setAttribute('scale', '0.001 0.001 0.001');
   el.setAttribute('material', 'transparent: true; opacity: 0; shader: flat');
   el.setAttribute(
-    'animation__scale',
-    `property: scale; to: ${spot.scale} ${spot.scale} ${spot.scale}; dur: ${BEAT_ANIM_MS}; easing: easeOutElastic`
+    'animation__grow',
+    `property: scale; to: 1 1 1; dur: ${BEAT_ANIM_MS}; easing: easeOutElastic`
   );
   el.setAttribute(
     'animation__fade',
     `property: material.opacity; to: 1; dur: ${Math.round(BEAT_ANIM_MS * 0.6)}; easing: easeOutQuad`
   );
   el.setAttribute(
-    'animation__sway',
-    `property: rotation; to: 0 0 6; dir: alternate; loop: true; dur: 1800; easing: easeInOutSine; delay: ${BEAT_ANIM_MS}`
-  );
-  // Gentle breathing glow once settled, so bloomed flowers feel alive rather
-  // than static — starts after the bloom-in tween finishes.
-  el.setAttribute(
     'animation__breathe',
-    `property: material.opacity; from: 1; to: 0.8; dir: alternate; loop: true; dur: 1400; delay: ${BEAT_ANIM_MS}; easing: easeInOutSine`
+    `property: material.opacity; from: 1; to: 0.82; dir: alternate; loop: true; dur: 1800; delay: ${BEAT_ANIM_MS}; easing: easeInOutSine`
   );
   return el;
 }
@@ -164,7 +144,7 @@ function makeTree(spot) {
   wrapper.setAttribute('position', toPos(spot.x, spot.y, 0));
   wrapper.setAttribute('scale', '0.001 0.001 0.001');
 
-  const treeHeight = 1.6; // coconut-tree.svg viewBox is 100x160
+  const treeHeight = 160 / 140; // coconut-tree.svg viewBox is 140x160
   const img = document.createElement('a-image');
   img.setAttribute('src', '#coconut-tree');
   img.setAttribute('width', '1');
@@ -196,7 +176,7 @@ function makeBoat(spot) {
   el.classList.add('bloom-layer');
   el.setAttribute('src', '#boat');
   el.setAttribute('width', '1');
-  el.setAttribute('height', '0.5'); // boat.svg viewBox is 220x110
+  el.setAttribute('height', String(120 / 220)); // boat.svg viewBox is 220x120
   el.setAttribute('position', toPos(spot.x, spot.y, 0));
   el.setAttribute('scale', '0.001 0.001 0.001');
   el.setAttribute('material', 'transparent: true; opacity: 0; shader: flat');
@@ -291,11 +271,12 @@ function playSequence() {
   const caption = document.getElementById('caption');
   caption.classList.remove('show');
 
+  targetEl.appendChild(makeTitleBanner());
+
   STORY_BEATS.forEach((spot, i) => {
     timers.push(
       setTimeout(() => {
         targetEl.appendChild(makeBurst(spot, spot.scale));
-        targetEl.appendChild(makeFlower(spot));
         if (i === 0) targetEl.appendChild(makeTree(TREE_SPOT));
         if (i === 1) targetEl.appendChild(makeBoat(BOAT_SPOT));
         caption.textContent = spot.caption;
@@ -308,27 +289,15 @@ function playSequence() {
 
   timers.push(
     setTimeout(() => {
-      targetEl.appendChild(makeFlower(CROWN_ACCENT));
-    }, afterBeats)
-  );
-
-  timers.push(
-    setTimeout(() => {
-      RING_ACCENTS.forEach((spot) => targetEl.appendChild(makeFlower(spot)));
-    }, afterBeats + STAGGER_MS)
-  );
-
-  timers.push(
-    setTimeout(() => {
       for (let i = 0; i < SPARKLE_COUNT; i++) {
         targetEl.appendChild(makeSparkle());
       }
       caption.classList.remove('show');
 
-      const beeWaypoints = [...STORY_BEATS, CROWN_ACCENT];
+      const beeWaypoints = [TREE_SPOT, BOAT_SPOT, ...STORY_BEATS];
       targetEl.appendChild(makeBee(beeWaypoints, { phaseMs: 0, hopDurMs: 1200, pauseMs: 500, scale: 0.05 }));
       targetEl.appendChild(makeBee(beeWaypoints, { phaseMs: 900, hopDurMs: 1500, pauseMs: 700, scale: 0.045 }));
-    }, afterBeats + STAGGER_MS * 2)
+    }, afterBeats + STAGGER_MS)
   );
 }
 

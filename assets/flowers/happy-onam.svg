@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 190">
+  <defs>
+    <path id="onam-arc" d="M 15 175 A 185 185 0 0 1 385 175" fill="none"/>
+  </defs>
+  <text
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="46"
+    font-weight="bold"
+    fill="#ffd24c"
+    stroke="#5a2e0a"
+    stroke-width="3"
+    paint-order="stroke fill"
+    letter-spacing="3"
+  >
+    <textPath href="#onam-arc" startOffset="50%" text-anchor="middle">HAPPY ONAM</textPath>
+  </text>
+</svg>
