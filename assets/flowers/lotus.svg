@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <g fill="#C81D5B">
+    <path d="M50 50 L38 14 Q50 6 62 14 Z" transform="rotate(0 50 50)"/>
+    <path d="M50 50 L38 14 Q50 6 62 14 Z" transform="rotate(45 50 50)"/>
+    <path d="M50 50 L38 14 Q50 6 62 14 Z" transform="rotate(90 50 50)"/>
+    <path d="M50 50 L38 14 Q50 6 62 14 Z" transform="rotate(135 50 50)"/>
+    <path d="M50 50 L38 14 Q50 6 62 14 Z" transform="rotate(180 50 50)"/>
+    <path d="M50 50 L38 14 Q50 6 62 14 Z" transform="rotate(225 50 50)"/>
+    <path d="M50 50 L38 14 Q50 6 62 14 Z" transform="rotate(270 50 50)"/>
+    <path d="M50 50 L38 14 Q50 6 62 14 Z" transform="rotate(315 50 50)"/>
+  </g>
+  <g fill="#E75A7C">
+    <path d="M50 50 L42 24 Q50 18 58 24 Z" transform="rotate(22 50 50)"/>
+    <path d="M50 50 L42 24 Q50 18 58 24 Z" transform="rotate(67 50 50)"/>
+    <path d="M50 50 L42 24 Q50 18 58 24 Z" transform="rotate(112 50 50)"/>
+    <path d="M50 50 L42 24 Q50 18 58 24 Z" transform="rotate(157 50 50)"/>
+    <path d="M50 50 L42 24 Q50 18 58 24 Z" transform="rotate(202 50 50)"/>
+    <path d="M50 50 L42 24 Q50 18 58 24 Z" transform="rotate(247 50 50)"/>
+    <path d="M50 50 L42 24 Q50 18 58 24 Z" transform="rotate(292 50 50)"/>
+    <path d="M50 50 L42 24 Q50 18 58 24 Z" transform="rotate(337 50 50)"/>
+  </g>
+  <circle cx="50" cy="50" r="9" fill="#FFD24C"/>
+</svg>

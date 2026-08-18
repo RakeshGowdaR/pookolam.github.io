@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <clipPath id="bee-body-clip">
+      <ellipse cx="46" cy="56" rx="24" ry="17"/>
+    </clipPath>
+  </defs>
+  <g opacity="0.92">
+    <ellipse cx="30" cy="42" rx="19" ry="10" fill="#eef6ff" opacity="0.75" transform="rotate(-18 30 42)"/>
+    <ellipse cx="58" cy="40" rx="17" ry="9" fill="#eef6ff" opacity="0.75" transform="rotate(14 58 40)"/>
+  </g>
+  <g clip-path="url(#bee-body-clip)">
+    <rect x="14" y="39" width="64" height="34" fill="#3a2a12"/>
+    <rect x="20" y="39" width="9" height="34" fill="#ffcf3f"/>
+    <rect x="35" y="39" width="9" height="34" fill="#ffcf3f"/>
+    <rect x="50" y="39" width="9" height="34" fill="#ffcf3f"/>
+    <rect x="65" y="39" width="9" height="34" fill="#ffcf3f"/>
+  </g>
+  <ellipse cx="46" cy="56" rx="24" ry="17" fill="none" stroke="#20150a" stroke-width="2"/>
+  <circle cx="76" cy="52" r="11" fill="#20150a"/>
+  <path d="M78 43 Q88 34 94 36" stroke="#20150a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M80 45 Q90 39 96 44" stroke="#20150a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+</svg>
