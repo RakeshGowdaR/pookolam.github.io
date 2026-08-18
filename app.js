@@ -331,6 +331,28 @@ function showError(message) {
   document.getElementById('hint').style.display = 'none';
 }
 
+// No web page can open a browser's permission settings itself — every
+// browser blocks that on purpose, precisely so a site can't push someone
+// into changing security settings. Once camera access is denied, the exact
+// manual fix differs enough by platform that a single generic instruction
+// ("tap the lock icon") is wrong often enough to be useless — so pick the
+// right one based on the device actually reporting the error.
+function permissionFixInstructions() {
+  const ua = navigator.userAgent;
+  const isIOS = /iPhone|iPad|iPod/.test(ua);
+  if (isIOS) {
+    return (
+      'On iPhone/iPad: tap the "aA" icon at the left of the address bar → Website Settings → ' +
+      'Camera → Allow, then reload. If Camera isn\'t listed there, check ' +
+      'Settings app → [your browser] → Camera is turned on for this device first.'
+    );
+  }
+  return (
+    'Tap the lock/info icon next to the address bar → Permissions (or "Site settings") → ' +
+    'Camera → Allow, then reload.'
+  );
+}
+
 const sceneEl = document.querySelector('a-scene');
 
 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -346,8 +368,8 @@ sceneEl.addEventListener('arError', (e) => {
   const reason = e && e.detail && e.detail.error;
   remoteLog('ar-error', { reason, video: videoSnapshot() });
   showError(
-    "Camera didn't start (" + (reason || 'unknown error') + "). Most likely camera permission was denied or is blocked for this site.\n\n" +
-    'Tap the lock/info icon next to the address bar, allow Camera, then reload.'
+    "Camera didn't start (" + (reason || 'unknown error') + "). Most likely camera permission was denied or blocked for this site.\n\n" +
+    permissionFixInstructions()
   );
 });
 
@@ -361,9 +383,7 @@ const cameraWatchdog = setTimeout(() => {
   const gotFrame = snap.videoExists && snap.readyState >= 2 && snap.videoWidth > 0;
   remoteLog('video-check-6s', { video: snap, gotFrame });
   if (!gotFrame && !document.getElementById('error').classList.contains('show')) {
-    showError(
-      "Camera feed never started. Check that camera permission is allowed for this site (tap the lock/info icon next to the address bar), then reload."
-    );
+    showError('Camera feed never started.\n\n' + permissionFixInstructions());
   }
 }, 6000);
 
