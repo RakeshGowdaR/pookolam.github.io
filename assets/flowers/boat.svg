@@ -1,16 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -25 220 120">
-  <path d="M10 55 C30 30 85 18 110 18 C135 18 190 30 210 55 C190 80 135 92 110 92 C85 92 30 80 10 55 Z"
-        fill="#5a1f45"/>
-  <path d="M10 55 C30 30 85 18 110 18 C135 18 190 30 210 55"
-        fill="none" stroke="#c98a3a" stroke-width="3"/>
-  <path d="M30 55 C50 40 90 32 110 32 C130 32 170 40 190 55 C170 68 130 76 110 76 C90 76 50 68 30 55 Z"
-        fill="#7a2f5f"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -35 220 120">
+  <path d="M6 50 C20 20 70 8 110 8 C150 8 200 20 214 50 C200 72 150 82 110 82 C70 82 20 72 6 50 Z"
+        fill="#6b1030" stroke="#ffd24c" stroke-width="4"/>
+  <path d="M20 50 C40 34 80 26 110 26 C140 26 180 34 200 50 C180 62 140 68 110 68 C80 68 40 62 20 50 Z"
+        fill="#9b2a55"/>
   <g>
-    <rect x="68" y="4" width="4" height="16" fill="#5a3a1a"/>
-    <path d="M70 4 Q58 -6 70 -14 Q82 -6 70 4 Z" fill="#e0562b"/>
-    <rect x="108" y="0" width="4" height="20" fill="#5a3a1a"/>
-    <path d="M110 0 Q96 -12 110 -20 Q124 -12 110 0 Z" fill="#ffcf3f"/>
-    <rect x="148" y="4" width="4" height="16" fill="#5a3a1a"/>
-    <path d="M150 4 Q138 -6 150 -14 Q162 -6 150 4 Z" fill="#e0562b"/>
+    <rect x="60" y="-30" width="6" height="22" fill="#4a2a10"/>
+    <path d="M66 -30 L100 -20 L66 -10 Z" fill="#ffcf3f"/>
+    <rect x="140" y="-30" width="6" height="22" fill="#4a2a10"/>
+    <path d="M146 -30 L180 -20 L146 -10 Z" fill="#e0562b"/>
   </g>
 </svg>

@@ -69,16 +69,18 @@ const STORY_BEATS = [
   { x: -0.34, y: 0.20, scale: 0.20, caption: 'The boats race by in festival joy' },
   { x: -0.12, y: -0.06, scale: 0.18, caption: "She waits, dressed for his homecoming" },
   { x: 0.00, y: -0.30, scale: 0.22, caption: 'The lotus blooms to welcome the king' },
-  { x: 0.30, y: -0.14, scale: 0.24, caption: 'Maveli returns to see his people' },
+  { x: 0.38, y: -0.16, scale: 0.26, caption: 'Maveli returns to see his people' },
 ];
 
 // The coconut tree's and king's positions are their BASE (see makeTree/
 // makeKing — they sway from there, not their center), roughly where feet
 // meet ground in the design. The boat bobs in place, so its spot is its
-// center.
-const TREE_SPOT = { x: 0.20, y: -0.02, scale: 0.22 };
+// center. Tree and king are pushed further apart on the x-axis than the
+// first pass, which put them close enough to visually blend into each
+// other (tree fronds reading as part of his headwear).
+const TREE_SPOT = { x: 0.14, y: -0.02, scale: 0.20 };
 const BOAT_SPOT = { x: -0.26, y: 0.00, scale: 0.24 };
-const KING_SPOT = { x: 0.30, y: -0.30, scale: 0.26 };
+const KING_SPOT = { x: 0.38, y: -0.32, scale: 0.28 };
 
 const SPARKLE_COUNT = 14;
 
@@ -100,7 +102,7 @@ function makeTitleBanner() {
   el.classList.add('bloom-layer');
   el.setAttribute('src', '#happy-onam');
   const width = 0.85;
-  const height = width * (190 / 400); // happy-onam.svg viewBox is 400x190
+  const height = width * (250 / 400); // happy-onam.svg viewBox is 400x250 (with headroom for the arc's peak)
   el.setAttribute('width', String(width));
   el.setAttribute('height', String(height));
   el.setAttribute('position', toPos(0, 0.5 * TARGET_HEIGHT + height / 2 + 0.04, 0.02));
