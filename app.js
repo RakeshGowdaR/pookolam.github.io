@@ -69,13 +69,16 @@ const STORY_BEATS = [
   { x: -0.34, y: 0.20, scale: 0.20, caption: 'The boats race by in festival joy' },
   { x: -0.12, y: -0.06, scale: 0.18, caption: "She waits, dressed for his homecoming" },
   { x: 0.00, y: -0.30, scale: 0.22, caption: 'The lotus blooms to welcome the king' },
+  { x: 0.30, y: -0.14, scale: 0.24, caption: 'Maveli returns to see his people' },
 ];
 
-// The coconut tree's position is its BASE (see makeTree — it sways from
-// there, not its center), roughly where the trunk meets the ground in the
-// design. The boat bobs in place, so its spot is just its center.
+// The coconut tree's and king's positions are their BASE (see makeTree/
+// makeKing — they sway from there, not their center), roughly where feet
+// meet ground in the design. The boat bobs in place, so its spot is its
+// center.
 const TREE_SPOT = { x: 0.20, y: -0.02, scale: 0.22 };
 const BOAT_SPOT = { x: -0.26, y: 0.00, scale: 0.24 };
+const KING_SPOT = { x: 0.30, y: -0.30, scale: 0.26 };
 
 const SPARKLE_COUNT = 14;
 
@@ -201,6 +204,41 @@ function makeBoat(spot) {
   return el;
 }
 
+// King Mahabali (Maveli) — same base-anchored-wrapper trick as the tree, so
+// he sways from his feet instead of pivoting around his belt. An original
+// drawing in the same flat-SVG style as the rest of the scene, not a copy
+// of any stock illustration.
+function makeKing(spot) {
+  const wrapper = document.createElement('a-entity');
+  wrapper.classList.add('bloom-layer');
+  wrapper.setAttribute('position', toPos(spot.x, spot.y, 0));
+  wrapper.setAttribute('scale', '0.001 0.001 0.001');
+
+  const kingHeight = 220 / 140; // king-mahabali.svg viewBox is 140x220
+  const img = document.createElement('a-image');
+  img.setAttribute('src', '#king-mahabali');
+  img.setAttribute('width', '1');
+  img.setAttribute('height', String(kingHeight));
+  img.setAttribute('position', `0 ${kingHeight / 2} 0`);
+  img.setAttribute('material', 'transparent: true; opacity: 0; shader: flat');
+  wrapper.appendChild(img);
+
+  wrapper.setAttribute(
+    'animation__grow',
+    `property: scale; to: ${spot.scale} ${spot.scale} ${spot.scale}; dur: ${BEAT_ANIM_MS}; easing: easeOutElastic`
+  );
+  img.setAttribute(
+    'animation__fade',
+    `property: material.opacity; to: 1; dur: ${Math.round(BEAT_ANIM_MS * 0.6)}; easing: easeOutQuad`
+  );
+  wrapper.setAttribute(
+    'animation__wave',
+    `property: rotation; to: 0 0 4; dir: alternate; loop: true; dur: 1800; easing: easeInOutSine; delay: ${BEAT_ANIM_MS}`
+  );
+
+  return wrapper;
+}
+
 // A bee that endlessly hops between waypoints (pausing briefly at each to
 // "pollinate"), looping forever. Chains one A-Frame animation per hop via
 // startEvents/animationcomplete, then re-triggers itself at the end.
@@ -279,6 +317,7 @@ function playSequence() {
         targetEl.appendChild(makeBurst(spot, spot.scale));
         if (i === 0) targetEl.appendChild(makeTree(TREE_SPOT));
         if (i === 1) targetEl.appendChild(makeBoat(BOAT_SPOT));
+        if (i === 4) targetEl.appendChild(makeKing(KING_SPOT));
         caption.textContent = spot.caption;
         caption.classList.add('show');
       }, i * STAGGER_MS)
