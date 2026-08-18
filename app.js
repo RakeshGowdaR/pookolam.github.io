@@ -140,36 +140,69 @@ function makeBurst(spot, flowerScale) {
 }
 
 // The palm tree sways from its base, not its center — a plain a-image
-// rotates around its own middle, which looks wrong for a tree. Instead this
-// wraps the image in an entity anchored at the trunk's base, with the image
-// offset upward inside it, so rotating the WRAPPER sways it from the ground.
+// rotates around its own middle, which looks wrong for a tree. The trunk
+// uses the same base-anchored-wrapper trick as before. Each frond is its
+// OWN base-anchored wrapper too (attached near the trunk's top instead of
+// the ground), fanned out to a fixed angle, then swaying independently
+// around that angle with its own phase/speed — so the fronds move like
+// individual branches in a breeze instead of the whole tree rocking as one
+// rigid unit.
+const FROND_ANGLES = [-85, -55, -25, 0, 25, 55, 85];
+
 function makeTree(spot) {
   const wrapper = document.createElement('a-entity');
   wrapper.classList.add('bloom-layer');
   wrapper.setAttribute('position', toPos(spot.x, spot.y, 0));
   wrapper.setAttribute('scale', '0.001 0.001 0.001');
-
-  const treeHeight = 160 / 140; // coconut-tree.svg viewBox is 140x160
-  const img = document.createElement('a-image');
-  img.setAttribute('src', '#coconut-tree');
-  img.setAttribute('width', '1');
-  img.setAttribute('height', String(treeHeight));
-  img.setAttribute('position', `0 ${treeHeight / 2} 0`);
-  img.setAttribute('material', 'transparent: true; opacity: 0; shader: flat');
-  wrapper.appendChild(img);
-
   wrapper.setAttribute(
     'animation__grow',
     `property: scale; to: ${spot.scale} ${spot.scale} ${spot.scale}; dur: ${BEAT_ANIM_MS}; easing: easeOutElastic`
   );
-  img.setAttribute(
+
+  const trunkWidth = 0.5;
+  const trunkHeight = trunkWidth * (170 / 40); // trunk.svg viewBox is 40x170
+  const trunkImg = document.createElement('a-image');
+  trunkImg.setAttribute('src', '#trunk');
+  trunkImg.setAttribute('width', String(trunkWidth));
+  trunkImg.setAttribute('height', String(trunkHeight));
+  trunkImg.setAttribute('position', `0 ${trunkHeight / 2} 0`);
+  trunkImg.setAttribute('material', 'transparent: true; opacity: 0; shader: flat');
+  trunkImg.setAttribute(
     'animation__fade',
     `property: material.opacity; to: 1; dur: ${Math.round(BEAT_ANIM_MS * 0.6)}; easing: easeOutQuad`
   );
-  wrapper.setAttribute(
-    'animation__sway',
-    `property: rotation; to: 0 0 6; dir: alternate; loop: true; dur: 2200; easing: easeInOutSine; delay: ${BEAT_ANIM_MS}`
-  );
+  wrapper.appendChild(trunkImg);
+
+  const frondWidth = 0.42;
+  const frondHeight = frondWidth * (180 / 40); // frond.svg viewBox is 40x180
+  const attachY = trunkHeight * 0.95;
+
+  FROND_ANGLES.forEach((angle, i) => {
+    const frondWrapper = document.createElement('a-entity');
+    frondWrapper.setAttribute('position', `0 ${attachY} ${0.001 + i * 0.0001}`);
+    frondWrapper.setAttribute('rotation', `0 0 ${angle}`);
+    wrapper.appendChild(frondWrapper);
+
+    const frondImg = document.createElement('a-image');
+    frondImg.setAttribute('src', '#frond');
+    frondImg.setAttribute('width', String(frondWidth));
+    frondImg.setAttribute('height', String(frondHeight));
+    frondImg.setAttribute('position', `0 ${frondHeight / 2} 0`);
+    frondImg.setAttribute('material', 'transparent: true; opacity: 0; shader: flat');
+    frondImg.setAttribute(
+      'animation__fade',
+      `property: material.opacity; to: 1; dur: ${Math.round(BEAT_ANIM_MS * 0.6)}; delay: ${i * 40}; easing: easeOutQuad`
+    );
+    frondWrapper.appendChild(frondImg);
+
+    const sway = 5 + (i % 3);
+    const dur = 1700 + i * 140;
+    frondWrapper.setAttribute(
+      'animation__sway',
+      `property: rotation; from: 0 0 ${angle - sway}; to: 0 0 ${angle + sway}; ` +
+        `dir: alternate; loop: true; dur: ${dur}; delay: ${BEAT_ANIM_MS + i * 90}; easing: easeInOutSine`
+    );
+  });
 
   return wrapper;
 }
