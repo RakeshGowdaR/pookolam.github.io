@@ -62,20 +62,27 @@ function toPos(xFrac, yFrac, z) {
   return `${(xFrac * TARGET_WIDTH).toFixed(4)} ${(yFrac * TARGET_HEIGHT).toFixed(4)} ${z || 0}`;
 }
 
+// Each flower accent sits NEAR its story element but offset away from its
+// center, so it doesn't stack directly on top of the tree/boat/woman
+// graphics — the earlier version clustered everything at the same point
+// (a flower landing right on the woman's face, the tree overshooting the
+// frame). These are spread toward the four "corners" instead.
 const STORY_BEATS = [
-  { asset: '#marigold', x: 0.18, y: 0.20, scale: 0.22, caption: 'The palm sways — Onam breezes in' },
-  { asset: '#butterfly-pea', x: -0.22, y: 0.03, scale: 0.24, caption: 'The boats race by in festival joy' },
-  { asset: '#jasmine', x: 0.00, y: 0.08, scale: 0.22, caption: "She waits, dressed for his homecoming" },
-  { asset: '#lotus', x: 0.00, y: -0.23, scale: 0.28, caption: 'The lotus blooms to welcome the king' },
+  { asset: '#marigold', x: 0.32, y: 0.22, scale: 0.14, caption: 'The palm sways — Onam breezes in' },
+  { asset: '#butterfly-pea', x: -0.34, y: 0.20, scale: 0.14, caption: 'The boats race by in festival joy' },
+  { asset: '#jasmine', x: -0.12, y: -0.06, scale: 0.14, caption: "She waits, dressed for his homecoming" },
+  { asset: '#lotus', x: 0.00, y: -0.30, scale: 0.20, caption: 'The lotus blooms to welcome the king' },
 ];
 
-const CROWN_ACCENT = { asset: '#marigold', x: 0.12, y: 0.14, scale: 0.10 };
+const CROWN_ACCENT = { asset: '#marigold', x: 0.00, y: 0.34, scale: 0.09 };
 
 // The coconut tree's position is its BASE (see makeTree — it sways from
 // there, not its center), roughly where the trunk meets the ground in the
-// design. The boat bobs in place, so its spot is just its center.
-const TREE_SPOT = { x: 0.18, y: 0.02, scale: 0.34 };
-const BOAT_SPOT = { x: -0.22, y: 0.03, scale: 0.30 };
+// design. Scaled down from the first pass, which overshot the top edge of
+// the frame entirely. The boat bobs in place, so its spot is just its
+// center, also scaled down and nudged to sit clear of the flower accent.
+const TREE_SPOT = { x: 0.20, y: -0.02, scale: 0.22 };
+const BOAT_SPOT = { x: -0.26, y: 0.00, scale: 0.24 };
 
 const RING_ACCENTS = (() => {
   const spots = [];
