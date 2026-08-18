@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scan for Pookolam AR</title>
+  <style>
+    html, body {
+      margin: 0; height: 100%; background: #1a0f08;
+      display: flex; align-items: center; justify-content: center;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+    .card {
+      text-align: center; color: #fff8e6; padding: 40px;
+    }
+    h1 {
+      font-size: 2.4rem; margin: 0 0 8px; color: #ffd24c;
+    }
+    p.sub {
+      font-size: 1.2rem; opacity: 0.85; margin: 0 0 32px;
+    }
+    .qr-frame {
+      background: #fff8e6; padding: 20px; border-radius: 16px;
+      display: inline-block; box-shadow: 0 8px 40px rgba(255,210,76,0.25);
+    }
+    .qr-frame img { display: block; width: 320px; height: 320px; }
+    p.hint {
+      margin-top: 28px; font-size: 1.1rem; opacity: 0.75; font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Bring the Pookolam to life</h1>
+    <p class="sub">Scan with your phone's camera</p>
+    <div class="qr-frame">
+      <img src="./assets/qr.svg" alt="QR code to open the Pookolam AR experience" />
+    </div>
+    <p class="hint">Then point your phone at the pookolam</p>
+  </div>
+</body>
+</html>
