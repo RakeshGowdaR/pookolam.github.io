@@ -375,10 +375,44 @@ function playSequence() {
   );
 }
 
-function showError(message) {
+let errorRecoverable = false;
+
+function showError(message, recoverable) {
+  errorRecoverable = !!recoverable;
   document.getElementById('error-text').textContent = message;
   document.getElementById('error').classList.add('show');
   document.getElementById('hint').style.display = 'none';
+}
+
+function hideError() {
+  errorRecoverable = false;
+  document.getElementById('error').classList.remove('show');
+}
+
+// The watchdog's "camera feed never started" message fires just because no
+// frame has arrived in 6s — which also happens, harmlessly, whenever the
+// browser's own permission popup is still sitting there unanswered. If the
+// camera actually starts working after that (e.g. someone taps Allow a
+// little late), the banner shouldn't be left covering the screen forever.
+// Only watchdog-triggered errors are treated as recoverable this way —
+// arError (a real getUserMedia rejection) means access was actually denied,
+// so there's nothing to silently recover from.
+function watchForLateRecovery() {
+  let ticks = 0;
+  const interval = setInterval(() => {
+    ticks++;
+    if (!errorRecoverable || ticks > 30) {
+      clearInterval(interval);
+      return;
+    }
+    const snap = videoSnapshot();
+    if (snap.videoExists && snap.readyState >= 2 && snap.videoWidth > 0) {
+      remoteLog('late-recovery', {});
+      hideError();
+      document.getElementById('hint').style.display = '';
+      clearInterval(interval);
+    }
+  }, 1000);
 }
 
 // No web page can open a browser's permission settings itself — every
@@ -433,7 +467,8 @@ const cameraWatchdog = setTimeout(() => {
   const gotFrame = snap.videoExists && snap.readyState >= 2 && snap.videoWidth > 0;
   remoteLog('video-check-6s', { video: snap, gotFrame });
   if (!gotFrame && !document.getElementById('error').classList.contains('show')) {
-    showError('Camera feed never started.\n\n' + permissionFixInstructions());
+    showError('Camera feed never started.\n\n' + permissionFixInstructions(), true);
+    watchForLateRecovery();
   }
 }, 6000);
 
