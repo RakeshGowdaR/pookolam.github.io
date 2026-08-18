@@ -408,6 +408,24 @@ sceneEl.addEventListener('loaded', () => {
   remoteLog('scene-loaded', {});
   targetEl = document.getElementById('pookolam-target');
 
+  // Some phones/browsers report the AR canvas's initial size before the
+  // page layout has actually settled (or cap concurrent WebGL contexts,
+  // since MindAR's tracking engine and this rendering canvas are two
+  // separate ones) — either can leave the 3D layer sized wrong or blank
+  // while the camera feed and audio, which don't depend on it, work fine.
+  // A cheap, safe nudge: force a resize shortly after load so the renderer
+  // recomputes against the now-settled layout.
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
+
+  const canvas = sceneEl.canvas;
+  if (canvas) {
+    canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();
+      remoteLog('webgl-context-lost', {});
+      showError('The AR view stopped rendering (a browser/graphics limit was hit). Tap Reload to restart it.');
+    });
+  }
+
   targetEl.addEventListener('targetFound', () => {
     remoteLog('target-found', {});
     clearTimeout(cameraWatchdog);
@@ -416,6 +434,22 @@ sceneEl.addEventListener('loaded', () => {
       played = true;
       playSequence();
       startMusic();
+
+      // If the bloom sequence ran but nothing actually rendered (the exact
+      // "music plays, no visuals" symptom), the canvas is almost always
+      // sized wrong (0 or near-0) rather than genuinely broken. Surface
+      // that instead of leaving it silently blank.
+      setTimeout(() => {
+        const c = sceneEl.canvas;
+        const rendered = c && c.width > 10 && c.height > 10;
+        remoteLog('render-check', {
+          canvasSize: c ? { width: c.width, height: c.height } : null,
+          bloomLayerCount: targetEl.querySelectorAll('.bloom-layer').length,
+        });
+        if (!rendered) {
+          showError('The AR view rendered at the wrong size and may be blank. Tap Reload to try again.');
+        }
+      }, 1500);
     }
   });
 
