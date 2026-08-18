@@ -78,7 +78,7 @@ const STORY_BEATS = [
 // center. Tree and king are pushed further apart on the x-axis than the
 // first pass, which put them close enough to visually blend into each
 // other (tree fronds reading as part of his headwear).
-const TREE_SPOT = { x: 0.14, y: -0.02, scale: 0.20 };
+const TREE_SPOT = { x: 0.19, y: -0.02, scale: 0.20 };
 const BOAT_SPOT = { x: -0.26, y: 0.00, scale: 0.24 };
 const KING_SPOT = { x: 0.38, y: -0.32, scale: 0.28 };
 
@@ -147,7 +147,10 @@ function makeBurst(spot, flowerScale) {
 // around that angle with its own phase/speed — so the fronds move like
 // individual branches in a breeze instead of the whole tree rocking as one
 // rigid unit.
-const FROND_ANGLES = [-85, -55, -25, 0, 25, 55, 85];
+// Spread across ~300° (not just a flat 170° upward fan) so several fronds
+// droop below horizontal like a real palm crown, instead of reading as a
+// hand-fan/sunburst shape.
+const FROND_ANGLES = [-150, -100, -50, 0, 50, 100, 150];
 
 function makeTree(spot) {
   const wrapper = document.createElement('a-entity');
@@ -159,7 +162,11 @@ function makeTree(spot) {
     `property: scale; to: ${spot.scale} ${spot.scale} ${spot.scale}; dur: ${BEAT_ANIM_MS}; easing: easeOutElastic`
   );
 
-  const trunkWidth = 0.5;
+  // These are in the SAME local units the outer wrapper's grow-in scale
+  // then multiplies again — the earlier 0.5/0.42 values didn't account for
+  // that second multiplication and rendered roughly 3x too big, badly
+  // overshooting the design's frame.
+  const trunkWidth = 0.18;
   const trunkHeight = trunkWidth * (170 / 40); // trunk.svg viewBox is 40x170
   const trunkImg = document.createElement('a-image');
   trunkImg.setAttribute('src', '#trunk');
@@ -173,7 +180,7 @@ function makeTree(spot) {
   );
   wrapper.appendChild(trunkImg);
 
-  const frondWidth = 0.42;
+  const frondWidth = 0.17;
   const frondHeight = frondWidth * (180 / 40); // frond.svg viewBox is 40x180
   const attachY = trunkHeight * 0.95;
 
