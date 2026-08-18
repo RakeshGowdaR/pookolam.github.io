@@ -1,3 +1,4 @@
 node_modules/
 .cert/
 device-logs.ndjson
+smoke-test-screenshot.png
