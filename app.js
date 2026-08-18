@@ -256,7 +256,7 @@ function makeKing(spot) {
   wrapper.setAttribute('position', toPos(spot.x, spot.y, 0));
   wrapper.setAttribute('scale', '0.001 0.001 0.001');
 
-  const kingHeight = 220 / 140; // king-mahabali.svg viewBox is 140x220
+  const kingHeight = 200 / 160; // king-mahabali.svg viewBox is 160x200
   const img = document.createElement('a-image');
   img.setAttribute('src', '#king-mahabali');
   img.setAttribute('width', '1');
