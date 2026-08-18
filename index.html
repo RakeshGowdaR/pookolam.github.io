@@ -17,6 +17,20 @@
     */
     html { margin: 0; height: 100%; background: #000; }
     body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+    /*
+      mindar-image-aframe sizes/positions the camera <video> itself via a
+      manual transform (its own "cover" math), which has shown up wrong
+      (tiny, corner-pinned) on at least one iOS version. Forcing it here
+      with plain CSS object-fit is the modern, more broadly-reliable way to
+      guarantee full-screen coverage regardless of that internal logic.
+      position:fixed also sidesteps any ambiguity about body's height on
+      iOS Safari, where the dynamic toolbar can make 100% heights unreliable.
+    */
+    body > video {
+      position: fixed !important; inset: 0 !important;
+      width: 100vw !important; height: 100vh !important;
+      object-fit: cover !important; z-index: -2 !important;
+    }
     #caption {
       position: fixed; left: 0; right: 0; bottom: 28px;
       text-align: center; z-index: 10; pointer-events: none;
@@ -83,7 +97,7 @@
        and retune the STORY_BEATS/RING_ACCENTS x/y fractions to match.
   -->
   <a-scene
-    mindar-image="imageTargetSrc: ./assets/pookolam.mind; autoStart: true; uiScanning: true;"
+    mindar-image="imageTargetSrc: ./assets/pookolam.mind; autoStart: true; uiScanning: false; uiLoading: false; uiError: false;"
     color-space="sRGB"
     renderer="colorManagement: true, physicallyCorrectLights"
     vr-mode-ui="enabled: false"
