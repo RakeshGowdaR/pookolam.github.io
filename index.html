@@ -82,19 +82,19 @@
   </div>
 
   <!--
-    imageTargetSrc is currently compiled from the shortlisted DESIGN MOCKUP
-    (assets/pookolam-source-v2.png — woman/boat/palm/lotus design), not a
-    photo of the finished physical pookolam — tracking quality against the
-    real floor design may differ.
+    imageTargetSrc is compiled from a photo of the actual finished physical
+    pookolam (assets/pookolam-source-v3-cropped.png — woman/elephant/palm/
+    lotus design), cropped tight to the leaf border from the raw camera
+    photo. See compiler.html for the exact source filename.
 
-    TO SWITCH TO A REAL PHOTO ONCE THE PHYSICAL DESIGN EXISTS:
-    1. Photograph the finished physical design (see ar/webar_build_guide.md).
-    2. Recompile: replace assets/pookolam-source-v2.png with the new photo
-       (update the filename in compiler.html too) and rerun
+    TO SWAP IN A NEW PHOTO LATER:
+    1. Photograph the physical design (see ar/webar_build_guide.md).
+    2. Crop it to the design's circle, minimal background.
+    3. Recompile: update the filename in compiler.html and rerun
        `node compile-marker.js` (or use
        https://hiukim.github.io/mind-ar-js-doc/tools/compile manually).
-    3. Update TARGET_ASPECT in app.js to the new photo's height/width ratio,
-       and retune the STORY_BEATS/RING_ACCENTS x/y fractions to match.
+    4. Update TARGET_ASPECT in app.js to the new photo's height/width ratio,
+       and retune the STORY_BEATS/spot x/y fractions to match.
   -->
   <a-scene
     mindar-image="imageTargetSrc: ./assets/pookolam.mind; autoStart: true; uiScanning: false; uiLoading: false; uiError: false;"
@@ -113,7 +113,7 @@
       <img id="bee" src="./assets/flowers/bee.svg" />
       <img id="trunk" src="./assets/flowers/trunk.svg" />
       <img id="frond" src="./assets/flowers/frond.svg" />
-      <img id="boat" src="./assets/flowers/boat.svg" />
+      <img id="elephant" src="./assets/flowers/elephant.svg" />
       <img id="happy-onam" src="./assets/flowers/happy-onam.svg" />
       <img id="king-mahabali" src="./assets/flowers/king-mahabali.svg" />
     </a-assets>
@@ -128,6 +128,6 @@
   <!-- Cache-busting version bump — increment this whenever app.js changes,
        so GitHub Pages' 10-minute cache doesn't serve stale JS to returning
        visitors (this is what caused "still see old design" after a deploy). -->
-  <script src="./app.js?v=3"></script>
+  <script src="./app.js?v=4"></script>
 </body>
 </html>

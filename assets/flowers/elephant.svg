@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 170">
+  <!-- Legs -->
+  <rect x="60" y="120" width="16" height="40" rx="6" fill="#75787e"/>
+  <rect x="95" y="125" width="16" height="38" rx="6" fill="#75787e"/>
+  <rect x="130" y="120" width="16" height="40" rx="6" fill="#8a8d93"/>
+  <rect x="160" y="118" width="16" height="42" rx="6" fill="#8a8d93"/>
+
+  <!-- Tail -->
+  <path d="M175 95 Q195 110 190 135" stroke="#75787e" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <circle cx="190" cy="138" r="5" fill="#4a2f20"/>
+
+  <!-- Body -->
+  <ellipse cx="120" cy="95" rx="65" ry="42" fill="#8a8d93"/>
+
+  <!-- Ear -->
+  <ellipse cx="55" cy="75" rx="32" ry="40" fill="#6e7176" transform="rotate(-8 55 75)"/>
+  <ellipse cx="52" cy="75" rx="20" ry="27" fill="#9a9ea4" transform="rotate(-8 52 75)"/>
+
+  <!-- Head -->
+  <ellipse cx="68" cy="78" rx="34" ry="36" fill="#8a8d93"/>
+
+  <!-- Trunk -->
+  <path d="M45 95 Q30 120 38 145 Q42 160 55 158 Q50 148 44 145 Q52 130 58 110 Q60 100 52 92 Z" fill="#8a8d93"/>
+
+  <!-- Tusks -->
+  <path d="M50 108 Q40 118 44 130" stroke="#fdf6e3" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M62 112 Q56 122 60 132" stroke="#fdf6e3" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- Eye -->
+  <circle cx="60" cy="70" r="4" fill="#2a1a10"/>
+
+  <!-- Nettipattam (ceremonial gold forehead plate) -->
+  <path d="M48 46 Q68 32 88 46 Q84 62 68 66 Q52 62 48 46 Z" fill="#ffb100"/>
+  <circle cx="68" cy="50" r="6" fill="#c81d3a"/>
+  <circle cx="40" cy="55" r="4" fill="#ffe08a"/>
+  <circle cx="95" cy="55" r="4" fill="#ffe08a"/>
+
+  <!-- Caparison cloth -->
+  <path d="M75 60 Q120 45 165 65 L160 100 Q120 85 80 100 Z" fill="#5b3fa0"/>
+  <path d="M75 60 Q120 45 165 65 L163 72 Q120 54 78 68 Z" fill="#ffb100"/>
+  <circle cx="90" cy="102" r="4" fill="#ffb100"/>
+  <circle cx="120" cy="106" r="4" fill="#ffb100"/>
+  <circle cx="150" cy="100" r="4" fill="#ffb100"/>
+</svg>

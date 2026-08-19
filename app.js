@@ -1,14 +1,15 @@
 // Pookolam AR — story-mode bloom sequence.
 // Positions are fractions of the tracked image's width/height (-0.5..0.5),
-// read directly off assets/pookolam-source-v2.png (the newly shortlisted
-// design, 727x736: a woman awaiting the king's return, a decorated Vallam
-// (snake boat), a palm tree, and a lotus in bloom).
+// read directly off assets/pookolam-source-v3-cropped.png (a photo of the
+// actual physical pookolam, cropped to its leaf border, 1922x1406: a woman
+// awaiting the king's return, a caparisoned elephant, a palm tree, and a
+// lotus in bloom).
 //
 // TARGET_ASPECT must match the marker image currently set in index.html's
 // imageTargetSrc. Update this and the spot fractions below if a new photo
 // is compiled in later (see ar/webar_build_guide.md).
 
-const TARGET_ASPECT = 736 / 727;
+const TARGET_ASPECT = 1406 / 1922;
 const TARGET_WIDTH = 1;
 const TARGET_HEIGHT = TARGET_WIDTH * TARGET_ASPECT;
 
@@ -63,24 +64,25 @@ function toPos(xFrac, yFrac, z) {
 }
 
 // No flower icons anymore — just a caption + light burst at each story
-// point, plus the tree/boat graphics. `scale` here only sizes the burst.
+// point, plus the tree/elephant graphics. `scale` here only sizes the burst.
 const STORY_BEATS = [
-  { x: 0.32, y: 0.22, scale: 0.20, caption: 'The palm sways — Onam breezes in' },
-  { x: -0.34, y: 0.20, scale: 0.20, caption: 'The boats race by in festival joy' },
-  { x: -0.12, y: -0.06, scale: 0.18, caption: "She waits, dressed for his homecoming" },
+  { x: 0.26, y: -0.13, scale: 0.20, caption: 'The palm sways — Onam breezes in' },
+  { x: -0.30, y: -0.08, scale: 0.20, caption: 'The caparisoned elephant arrives in celebration' },
+  { x: 0.00, y: -0.10, scale: 0.18, caption: "She waits, dressed for his homecoming" },
   { x: 0.00, y: -0.30, scale: 0.22, caption: 'The lotus blooms to welcome the king' },
-  { x: 0.38, y: -0.16, scale: 0.26, caption: 'Maveli returns to see his people' },
+  { x: 0.36, y: 0.00, scale: 0.26, caption: 'Maveli returns to see his people' },
 ];
 
-// The coconut tree's and king's positions are their BASE (see makeTree/
-// makeKing — they sway from there, not their center), roughly where feet
-// meet ground in the design. The boat bobs in place, so its spot is its
-// center. Tree and king are pushed further apart on the x-axis than the
-// first pass, which put them close enough to visually blend into each
-// other (tree fronds reading as part of his headwear).
-const TREE_SPOT = { x: 0.19, y: -0.02, scale: 0.20 };
-const BOAT_SPOT = { x: -0.26, y: 0.00, scale: 0.24 };
-const KING_SPOT = { x: 0.38, y: -0.32, scale: 0.28 };
+// The coconut tree's, elephant's, and king's positions are their BASE (see
+// makeTree/makeElephant/makeKing — they sway from there, not their
+// center), roughly where feet meet ground in the design. Coordinates read
+// directly off assets/pookolam-source-v3-cropped.png.
+const TREE_SPOT = { x: 0.26, y: -0.13, scale: 0.20 };
+const ELEPHANT_SPOT = { x: -0.30, y: -0.10, scale: 0.24 };
+// King's burst (STORY_BEATS[4]) lands at 0.36/0.00 — an open patch of the
+// design between the tree trunk and the ray border — so his base sits half
+// his rendered height below that: 0.28 * (128/93) / 2 ≈ 0.19.
+const KING_SPOT = { x: 0.36, y: -0.19, scale: 0.28 };
 
 const SPARKLE_COUNT = 14;
 
@@ -214,36 +216,37 @@ function makeTree(spot) {
   return wrapper;
 }
 
-// The boat bobs on the water: a gentle vertical rise/fall plus a slight
-// rock, both centered (unlike the tree, a boat's pivot can stay in the middle).
-function makeBoat(spot) {
-  const el = document.createElement('a-image');
-  el.classList.add('bloom-layer');
-  el.setAttribute('src', '#boat');
-  el.setAttribute('width', '1');
-  el.setAttribute('height', String(120 / 220)); // boat.svg viewBox is 220x120
-  el.setAttribute('position', toPos(spot.x, spot.y, 0));
-  el.setAttribute('scale', '0.001 0.001 0.001');
-  el.setAttribute('material', 'transparent: true; opacity: 0; shader: flat');
-  el.setAttribute(
+// The caparisoned elephant — same base-anchored-wrapper trick as the tree
+// and king, so it rocks from its feet rather than pivoting around its middle.
+function makeElephant(spot) {
+  const wrapper = document.createElement('a-entity');
+  wrapper.classList.add('bloom-layer');
+  wrapper.setAttribute('position', toPos(spot.x, spot.y, 0));
+  wrapper.setAttribute('scale', '0.001 0.001 0.001');
+
+  const elephantHeight = 170 / 220; // elephant.svg viewBox is 220x170
+  const img = document.createElement('a-image');
+  img.setAttribute('src', '#elephant');
+  img.setAttribute('width', '1');
+  img.setAttribute('height', String(elephantHeight));
+  img.setAttribute('position', `0 ${elephantHeight / 2} 0`);
+  img.setAttribute('material', 'transparent: true; opacity: 0; shader: flat');
+  wrapper.appendChild(img);
+
+  wrapper.setAttribute(
     'animation__grow',
     `property: scale; to: ${spot.scale} ${spot.scale} ${spot.scale}; dur: ${BEAT_ANIM_MS}; easing: easeOutElastic`
   );
-  el.setAttribute(
+  img.setAttribute(
     'animation__fade',
     `property: material.opacity; to: 1; dur: ${Math.round(BEAT_ANIM_MS * 0.6)}; easing: easeOutQuad`
   );
-  const bobDelta = 0.02;
-  el.setAttribute(
-    'animation__bob',
-    `property: position; from: ${toPos(spot.x, spot.y - bobDelta, 0)}; to: ${toPos(spot.x, spot.y + bobDelta, 0)}; ` +
-      `dir: alternate; loop: true; dur: 1600; easing: easeInOutSine; delay: ${BEAT_ANIM_MS}`
+  wrapper.setAttribute(
+    'animation__sway',
+    `property: rotation; to: 0 0 3; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine; delay: ${BEAT_ANIM_MS}`
   );
-  el.setAttribute(
-    'animation__rock',
-    `property: rotation; to: 0 0 4; dir: alternate; loop: true; dur: 1400; easing: easeInOutSine; delay: ${BEAT_ANIM_MS}`
-  );
-  return el;
+
+  return wrapper;
 }
 
 // King Mahabali (Maveli) — same base-anchored-wrapper trick as the tree, so
@@ -356,7 +359,7 @@ function playSequence() {
       setTimeout(() => {
         targetEl.appendChild(makeBurst(spot, spot.scale));
         if (i === 0) targetEl.appendChild(makeTree(TREE_SPOT));
-        if (i === 1) targetEl.appendChild(makeBoat(BOAT_SPOT));
+        if (i === 1) targetEl.appendChild(makeElephant(ELEPHANT_SPOT));
         if (i === 4) targetEl.appendChild(makeKing(KING_SPOT));
         caption.textContent = spot.caption;
         caption.classList.add('show');
@@ -373,7 +376,7 @@ function playSequence() {
       }
       caption.classList.remove('show');
 
-      const beeWaypoints = [TREE_SPOT, BOAT_SPOT, ...STORY_BEATS];
+      const beeWaypoints = [TREE_SPOT, ELEPHANT_SPOT, ...STORY_BEATS];
       targetEl.appendChild(makeBee(beeWaypoints, { phaseMs: 0, hopDurMs: 1200, pauseMs: 500, scale: 0.05 }));
       targetEl.appendChild(makeBee(beeWaypoints, { phaseMs: 900, hopDurMs: 1500, pauseMs: 700, scale: 0.045 }));
     }, afterBeats + STAGGER_MS)
