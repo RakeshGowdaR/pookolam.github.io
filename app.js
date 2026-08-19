@@ -247,16 +247,14 @@ function makeBoat(spot) {
 }
 
 // King Mahabali (Maveli) — same base-anchored-wrapper trick as the tree, so
-// he sways from his feet instead of pivoting around his belt. An original
-// drawing in the same flat-SVG style as the rest of the scene, not a copy
-// of any stock illustration.
+// he sways from his feet instead of pivoting around his belt.
 function makeKing(spot) {
   const wrapper = document.createElement('a-entity');
   wrapper.classList.add('bloom-layer');
   wrapper.setAttribute('position', toPos(spot.x, spot.y, 0));
   wrapper.setAttribute('scale', '0.001 0.001 0.001');
 
-  const kingHeight = 200 / 160; // king-mahabali.svg viewBox is 160x200
+  const kingHeight = 128 / 93; // king-mahabali.svg viewBox is 93x128
   const img = document.createElement('a-image');
   img.setAttribute('src', '#king-mahabali');
   img.setAttribute('width', '1');
